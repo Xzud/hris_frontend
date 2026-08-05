@@ -14,13 +14,15 @@ export function Welcome() {
           </a>
           <div></div>
           {isAuthenticated ? (
+            <div className="">
+              <NavLink value="Dashboard" href="/dashboard" />
+            </div>
+          ) : (
             <div className="flex justify-between gap-2">
               <NavLink value="Login" href="/login" />
               <span>/</span>
               <NavLink value="Register" href="/register" />
             </div>
-          ) : (
-            <div className=""></div>
           )}
         </div>
       </div>
