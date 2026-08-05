@@ -21,8 +21,16 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         </div>
         <div className="flex flex-col mt-8 flex-1">
           <li className="list-none">
-            <SideNavLink icon={<LayoutDashboard />} name="Dashboard" />
-            <SideNavLink icon={<UsersRound />} name="Employee" />
+            <SideNavLink
+              href="/dashboard/"
+              icon={<LayoutDashboard />}
+              name="Dashboard"
+            />
+            <SideNavLink
+              href="/employees/"
+              icon={<UsersRound />}
+              name="Employees"
+            />
             <SideNavLink icon={<CalendarCheck />} name="Attendance" />
             <SideNavLink icon={<FolderInput />} name="Requests" />
           </li>
