@@ -1,6 +1,6 @@
 import { InputField } from "./login";
 
-export default function Register() {
+export default function RegisterPage() {
   return (
     <div className="flex w-ful min-h-screen items-center justify-center">
       <div

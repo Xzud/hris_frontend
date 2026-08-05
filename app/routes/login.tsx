@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const userStore = useUserStore();
 
@@ -88,7 +88,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
 
 export function InputField({
   label,

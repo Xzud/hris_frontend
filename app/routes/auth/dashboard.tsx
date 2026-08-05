@@ -1,60 +1,65 @@
-import {
-  BadgeQuestionMark,
-  CalendarCheck,
-  FolderInput,
-  LayoutDashboard,
-  Settings,
-  UsersRound,
-} from "lucide-react";
-import React, { type ReactNode } from "react";
+import { UserRoundCheck, UsersRound } from "lucide-react";
+import { type ReactNode } from "react";
+import AuthLayout from "~/layouts/authlayout";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   return (
-    <div className="flex w-full dark:bg-neutral-900 min-h-screen">
-      {/* Side Navigation Bar */}
-      <div className="flex flex-col px-8 py-10 dark:bg-neutral-950 fixed top-0 h-full max-h-screen w-70">
+    <AuthLayout>
+      {/* Title Header */}
+      <div className="flex justify-between items-center">
         <div className="flex flex-col">
-          <span className="text-2xl font-bold">Simple HRIS</span>
-          <span className="text-xs">Manage your employees</span>
+          <span className="text-3xl font-bold">Dashboard</span>
+          <span className="text-sm text-neutral-300">
+            Overview analytics for human resources.
+          </span>
         </div>
-        <div className="flex flex-col mt-8 flex-1">
-          <li className="list-none">
-            <SideNavLink icon={<LayoutDashboard />} name="Dashboard" />
-            <SideNavLink icon={<UsersRound />} name="Employee" />
-            <SideNavLink icon={<CalendarCheck />} name="Attendance" />
-            <SideNavLink icon={<FolderInput />} name="Requests" />
-          </li>
-        </div>
-        <hr className="dark:border-neutral-500/20" />
-        <div className="flex flex-col mt-4">
-          <li className="list-none">
-            <SideNavLink icon={<BadgeQuestionMark />} name="Help Center" />
-            <SideNavLink icon={<Settings />} name="Settings" />
-          </li>
+        <div className="flex items-center justify-stretch gap-4">
+          <button className="font-bold text-white border px-4 py-2 rounded cursor-pointer">
+            Extend Report
+          </button>
+          <button className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer">
+            Add Employee
+          </button>
         </div>
       </div>
-      {/* Main Content */}
-      <div className="flex-1"></div>
-    </div>
+
+      {/* Grid Cards */}
+      <div className="grid grid-cols-4 mt-12 gap-8">
+        <div className="flex flex-col gap-4 dark:bg-neutral-800 p-5 rounded-xl">
+          <div className="flex items-center justify-between">
+            <div className="bg-sky-400/20 text-sky-500 rounded-xl p-2">
+              <UsersRound size={28} />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="uppercase text-xs text-neutral-400">
+              total employees
+            </span>
+            <span className="font-bold text-4xl">1,248</span>
+          </div>
+          <hr className="border-neutral-500/30" />
+          <span>Active workforce headcount across all sectors.</span>
+        </div>
+        <div className="flex flex-col gap-4 dark:bg-neutral-800 p-5 rounded-xl">
+          <div className="flex items-center justify-between">
+            <div className="bg-amber-400/20 text-amber-500 rounded-xl p-2">
+              <UserRoundCheck size={28} />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="uppercase text-xs text-neutral-400">
+              attendance today
+            </span>
+            <span className="font-bold text-4xl">98%</span>
+          </div>
+          <hr className="border-neutral-500/30" />
+          <span>
+            Some message here. <a href="#" className="text-blue-500">Check Attendance List</a>
+          </span>
+        </div>
+      </div>
+    </AuthLayout>
   );
 };
 
-interface SideNavLinkProps {
-  icon: ReactNode;
-  name: string;
-  href?: string;
-}
-
-function SideNavLink({ icon: Icon, name, href }: SideNavLinkProps) {
-  return (
-    <ul
-      className="flex gap-4 px-4 py-2 border-l-2 border-transparent cursor-pointer
-   hover:border-indigo-500 hover:bg-indigo-300/10 transition-all rounded"
-    >
-      {Icon}
-      <a href={href}>{name}</a>
-    </ul>
-  );
-}
-
-export default Dashboard;
+export default DashboardPage;
