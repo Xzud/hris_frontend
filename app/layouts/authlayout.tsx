@@ -4,12 +4,11 @@ import {
   CalendarCheck,
   FolderInput,
   Grip,
-  Icon,
   LayoutDashboard,
   Settings,
   UsersRound,
 } from "lucide-react";
-import React, {
+import {
   useEffect,
   useState,
   type PropsWithChildren,

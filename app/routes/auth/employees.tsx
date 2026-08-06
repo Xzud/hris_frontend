@@ -3,12 +3,17 @@ import {
   Search,
   UserRoundCheck,
   UsersRound,
+  X,
 } from "lucide-react";
+import { useState } from "react";
 import AuthLayout from "~/layouts/authlayout";
 
 const EmployeesPage = () => {
+  const [modalActive, setModalActive] = useState(false);
+
   return (
     <AuthLayout>
+      {modalActive && <EmployeeFormModal setModal={setModalActive} />}
       {/* Title Header */}
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
@@ -22,7 +27,7 @@ const EmployeesPage = () => {
           <button className="font-bold text-white border px-4 py-2 rounded cursor-pointer">
             Export
           </button>
-          <button className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer">
+          <button className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer" onClick={() => setModalActive(true)}>
             Add Employee
           </button>
         </div>
@@ -140,3 +145,37 @@ const EmployeesPage = () => {
 };
 
 export default EmployeesPage;
+
+function EmployeeFormModal({ setModal }: { setModal: Function }) {
+  return (
+    <div className="absolute top-0 left-0 h-screen w-screen bg-neutral-800/80 flex items-center justify-center">
+      <div className="rounded-xl bg-neutral-900 border border-neutral-500/40 p-8 min-w-120">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold">Add Employee</span>
+            <span className="text-sm text-neutral-300">
+              Enter employee details below.
+            </span>
+          </div>
+          <div>
+            <X
+              className="cursor-pointer hover:text-red-500"
+              onClick={() => setModal(false)}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-3 mt-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold uppercase">First Name</span>
+            <input
+              type="text"
+              name=""
+              id=""
+              className="border border-neutral-500/40 rounded-lg p-2"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
