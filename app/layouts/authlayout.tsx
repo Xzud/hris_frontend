@@ -14,8 +14,19 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from "react";
+import { useLocation } from "react-router";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  const sideNavigations = [
+    { href: "/dashboard/", icon: <LayoutDashboard />, name: "Dashboard" },
+    { href: "/employees/", icon: <UsersRound />, name: "Employees" },
+    { href: "#", icon: <CalendarCheck />, name: "Attendance" },
+    { href: "#", icon: <FolderInput />, name: "Requests" },
+  ];
+
   return (
     <div className="flex w-full dark:bg-neutral-900 min-h-screen ">
       {/* Side Navigation Bar */}
@@ -26,18 +37,17 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         </div>
         <div className="flex flex-col mt-8 flex-1">
           <li className="list-none flex flex-col gap-2">
-            <SideNavLink
-              href="/dashboard/"
-              icon={<LayoutDashboard />}
-              name="Dashboard"
-            />
-            <SideNavLink
-              href="/employees/"
-              icon={<UsersRound />}
-              name="Employees"
-            />
-            <SideNavLink icon={<CalendarCheck />} name="Attendance" />
-            <SideNavLink icon={<FolderInput />} name="Requests" />
+            {sideNavigations.map((navigation, idx) => {
+              return (
+                <SideNavLink
+                  key={`sidenav-${idx}`}
+                  href={navigation.href}
+                  icon={navigation.icon}
+                  name={navigation.name}
+                  active={pathname == navigation.href}
+                />
+              );
+            })}
           </li>
         </div>
         <hr className="dark:border-neutral-500/40" />
@@ -77,26 +87,25 @@ interface SideNavLinkProps {
   icon: ReactNode;
   name: string;
   href?: string;
+  active?: boolean;
 }
 
-function SideNavLink({ icon: Icon, name, href }: SideNavLinkProps) {
-  const [active, setActive] = useState(false);
-
-  useEffect(() => {
-    const currentLink = window.location.pathname;
-    if (href) {
-      const isActive = currentLink.search(href);
-      setActive(isActive >= 0);
-    }
-  }, []);
-
+function SideNavLink({
+  icon: Icon,
+  name,
+  href,
+  active = false,
+}: SideNavLinkProps) {
   return (
-    <ul
-      className={`flex gap-4 px-4 py-2 border-l-2 border-transparent cursor-pointer
-   ${active ? "bg-indigo-700" : "hover:border-indigo-500 hover:bg-indigo-300/10"} transition-all rounded`}
-    >
-      {Icon}
-      <a href={href}>{name}</a>
+    <ul>
+      <a
+        href={href}
+        className={`flex gap-4 px-4 py-2 border-l-2 border-transparent cursor-pointer
+        ${active ? "bg-indigo-700" : "hover:border-indigo-500 hover:bg-indigo-300/10"} transition-all rounded`}
+      >
+        {Icon}
+        <span>{name}</span>
+      </a>
     </ul>
   );
 }
