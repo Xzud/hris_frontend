@@ -10,7 +10,7 @@ export function Welcome() {
       <div className="h-20 w-full bg-white flex align-center justify-center">
         <div className="text-black flex items-center w-full max-w-7xl justify-between">
           <a href="">
-            <img src="" alt="" />
+            <img alt="" />
           </a>
           <div></div>
           {isAuthenticated ? (

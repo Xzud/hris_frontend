@@ -112,7 +112,7 @@ const EmployeesPage = () => {
         </div>
         <div className="grid grid-cols-6 justify-items-end font-semibold dark:text-neutral-300 p-4 ">
           <div className="flex items-center place-self-start gap-2">
-            <img src="" alt="" className="h-10 w-10 bg-white rounded-full" />
+            <img alt="" className="h-10 w-10 bg-white rounded-full" />
             <div className="flex flex-col">
               <span className="text-sm">Marcus Vance</span>
               <span className="text-xs text-neutral-300">ID: EMP-1042</span>
