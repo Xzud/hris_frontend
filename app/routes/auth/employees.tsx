@@ -6,6 +6,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { InputLabel } from "~/components/InputLabel";
 import AuthLayout from "~/layouts/authlayout";
 
 const EmployeesPage = () => {
@@ -39,10 +40,7 @@ const EmployeesPage = () => {
       {/* Employee Filter Panel */}
       <div className="p-4 rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-8">
         <div className="flex items-center justify-stretch gap-4">
-          <div className="flex flex-1 flex-col gap-2">
-            <span className="text-sm font-semibold dark:text-neutral-300">
-              Search Employees
-            </span>
+          <InputLabel label="Search Employees" className="flex-1">
             <div className="flex items-center py-2 px-4 gap-2 border border-neutral-500/30 rounded-xl">
               <Search />
               <input
@@ -51,10 +49,8 @@ const EmployeesPage = () => {
                 placeholder="Search by name or ID..."
               />
             </div>
-          </div>
-
-          <div className="flex flex-col gap-2 dark:text-neutral-300 min-w-60">
-            <span className="text-sm font-semibold">Department</span>
+          </InputLabel>
+          <InputLabel label="Department">
             <select
               name=""
               id=""
@@ -62,10 +58,8 @@ const EmployeesPage = () => {
             >
               <option value="All">All Departments</option>
             </select>
-          </div>
-
-          <div className="flex flex-col gap-2 dark:text-neutral-300 min-w-60">
-            <span className="text-sm font-semibold">Team</span>
+          </InputLabel>
+          <InputLabel label="Team">
             <select
               name=""
               id=""
@@ -73,10 +67,8 @@ const EmployeesPage = () => {
             >
               <option value="All">All Teams</option>
             </select>
-          </div>
-
-          <div className="flex flex-col gap-2 dark:text-neutral-300 min-w-60">
-            <span className="text-sm font-semibold">Level</span>
+          </InputLabel>
+          <InputLabel label="Level">
             <select
               name=""
               id=""
@@ -84,10 +76,8 @@ const EmployeesPage = () => {
             >
               <option value="All">All Levels</option>
             </select>
-          </div>
-
-          <div className="flex flex-col gap-2 dark:text-neutral-300 min-w-60">
-            <span className="text-sm font-semibold">Shift</span>
+          </InputLabel>
+          <InputLabel label="Shift">
             <select
               name=""
               id=""
@@ -95,7 +85,7 @@ const EmployeesPage = () => {
             >
               <option value="All">All Shifts</option>
             </select>
-          </div>
+          </InputLabel>
         </div>
         <hr className="border-neutral-500/40 my-5" />
         <div className="flex justify-between items-center">

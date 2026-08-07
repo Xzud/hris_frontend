@@ -6,7 +6,8 @@ import {
   UserMinus,
   UserRoundCheck,
 } from "lucide-react";
-import React, { type ComponentPropsWithoutRef } from "react";
+import React from "react";
+import { InputLabel } from "~/components/InputLabel";
 import AuthLayout from "~/layouts/authlayout";
 
 interface AttendanceAnalyticsCardProps {
@@ -160,7 +161,7 @@ const AttendancePage = () => {
           <span>
             Showing <strong>248</strong> employees
           </span>
-          <div className="flex gap-8">
+          <div className="flex gap-4">
             <div className="flex items-center justify-center gap-1 text-sky-500 cursor-pointer">
               Reset Filters
             </div>
@@ -207,19 +208,3 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
-
-type InputLabelProps = ComponentPropsWithoutRef<"div"> & {
-  label: string;
-};
-
-function InputLabel({ label, children, className, ...props }: InputLabelProps) {
-  return (
-    <div
-      className={`flex flex-col gap-2 dark:text-neutral-300 min-w-60 ${className}`}
-      {...props}
-    >
-      <span className="text-sm font-semibold">{label}</span>
-      {children}
-    </div>
-  );
-}
