@@ -23,8 +23,8 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
   const sideNavigations = [
     { href: "/dashboard/", icon: <LayoutDashboard />, name: "Dashboard" },
     { href: "/employees/", icon: <UsersRound />, name: "Employees" },
-    { href: "#", icon: <CalendarCheck />, name: "Attendance" },
-    { href: "#", icon: <FolderInput />, name: "Requests" },
+    { href: "/attendance/", icon: <CalendarCheck />, name: "Attendance" },
+    { href: "/requests/", icon: <FolderInput />, name: "Requests" },
   ];
 
   return (
@@ -60,7 +60,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
       </div>
       <div className="w-full">
         {/* Top Bar */}
-        <div className="flex items-center gap-8 px-12 py-3 w-full dark:bg-neutral-950 border-b border-neutral-500/40">
+        <div className="flex items-center gap-8 px-12 py-3 w-full sticky top-0 dark:bg-neutral-950 border-b border-neutral-500/40">
           <div className="flex-1 flex items-center">
             <div className="flex-1"></div>
             <div className="flex gap-8 items-center">

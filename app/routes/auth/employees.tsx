@@ -27,7 +27,10 @@ const EmployeesPage = () => {
           <button className="font-bold text-white border px-4 py-2 rounded cursor-pointer">
             Export
           </button>
-          <button className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer" onClick={() => setModalActive(true)}>
+          <button
+            className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer"
+            onClick={() => setModalActive(true)}
+          >
             Add Employee
           </button>
         </div>
@@ -107,16 +110,16 @@ const EmployeesPage = () => {
 
       {/* Employee List */}
       <div className="rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-8">
-        <div className="grid grid-cols-6 justify-items-end text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
-          <span className="uppercase place-self-start">employee</span>
+        <div className="grid grid-cols-[1.5fr_1fr_1fr__1fr_1fr_60px] justify-items-start text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
+          <span className="uppercase">employee</span>
           <span className="uppercase">Position & Dept</span>
           <span className="uppercase">Supervisory</span>
           <span className="uppercase">Shift</span>
           <span className="uppercase">Status</span>
           <span className="uppercase">Actions</span>
         </div>
-        <div className="grid grid-cols-6 justify-items-end font-semibold dark:text-neutral-300 p-4 ">
-          <div className="flex items-center place-self-start gap-2">
+        <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_60px] justify-items-start font-semibold dark:text-neutral-300 p-4 ">
+          <div className="flex items-center gap-2">
             <img alt="" className="h-10 w-10 bg-white rounded-full" />
             <div className="flex flex-col">
               <span className="text-sm">Marcus Vance</span>
