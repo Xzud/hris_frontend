@@ -5,12 +5,39 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "~/api";
 import { InputLabel } from "~/components/InputLabel";
 import AuthLayout from "~/layouts/authlayout";
 
+interface EmployeeProps {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  hire_date: string;
+  status: string;
+}
+
 const EmployeesPage = () => {
   const [modalActive, setModalActive] = useState(false);
+  const [employees, setEmployees] = useState<EmployeeProps[]>([]);
+
+  useEffect(() => {
+    async function fetchEmployees() {
+      try {
+        const response = await api.get("/employees/");
+        if (response.data) {
+          console.log(response.data);
+          setEmployees(response.data);
+        }
+      } catch (error) {
+        console.log("Error fetching employees: ", error);
+      }
+    }
+
+    fetchEmployees();
+  }, []);
 
   return (
     <AuthLayout>
@@ -108,30 +135,45 @@ const EmployeesPage = () => {
           <span className="uppercase">Status</span>
           <span className="uppercase">Actions</span>
         </div>
-        <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_60px] justify-items-start font-semibold dark:text-neutral-300 p-4 ">
-          <div className="flex items-center gap-2">
-            <img alt="" className="h-10 w-10 bg-white rounded-full" />
-            <div className="flex flex-col">
-              <span className="text-sm">Marcus Vance</span>
-              <span className="text-xs text-neutral-300">ID: EMP-1042</span>
+        {employees.length > 0 ? (
+          employees.map((employee, _) => (
+            <div
+              key={employee.id}
+              className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_60px] justify-items-start font-semibold dark:text-neutral-300 p-4 "
+            >
+              <div className="flex items-center gap-2">
+                <img alt="" className="h-10 w-10 bg-white rounded-full" />
+                <div className="flex flex-col">
+                  <span className="text-sm">
+                    {employee.first_name} {employee.last_name}
+                  </span>
+                  <span className="text-xs text-neutral-300">
+                    ID: EMP-{`${employee.id}`.padStart(4, "0")}
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm">Senior System Engineer</span>
+                <span className="text-xs text-neutral-300">
+                  Engineering - Core Infra
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm">Serah Jenkins</span>
+                <span className="text-xs text-neutral-300">VP Engineering</span>
+              </div>
+              <span className="text-xs uppercase">Morning</span>
+              <span className="text-xs uppercase">Active</span>
+              <div className="items-end">
+                <EllipsisVertical className="cursor-pointer" />
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="flex items-center justify-center p-4">
+            <span className="text-sm dark:text-neutral-300">No Employees found.</span>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm">Senior System Engineer</span>
-            <span className="text-xs text-neutral-300">
-              Engineering - Core Infra
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm">Serah Jenkins</span>
-            <span className="text-xs text-neutral-300">VP Engineering</span>
-          </div>
-          <span className="text-xs uppercase">Morning</span>
-          <span className="text-xs uppercase">Active</span>
-          <div className="items-end">
-            <EllipsisVertical className="cursor-pointer" />
-          </div>
-        </div>
+        )}
       </div>
     </AuthLayout>
   );

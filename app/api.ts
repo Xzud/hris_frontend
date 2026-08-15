@@ -7,4 +7,5 @@ export const api = axios.create({
     "Content-Type": "application/x-www-form-urlencoded",
     // Authorization: process.env.SECRET_KEY,
   },
+  withCredentials: true,
 });
