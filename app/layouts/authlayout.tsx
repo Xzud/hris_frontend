@@ -6,6 +6,7 @@ import {
   FolderInput,
   Grip,
   LayoutDashboard,
+  LogOut,
   Settings,
   UsersRound,
 } from "lucide-react";
@@ -14,6 +15,7 @@ import { useLocation } from "react-router";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
   const location = useLocation();
+  const [profileOpen, setProfileOpen] = useState(false);
   const { pathname } = location;
 
   const sideNavigations = [
@@ -56,29 +58,54 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         </div>
       </div>
       <div className="w-full">
-        {/* Top Bar */}
-        <div className="flex items-center gap-8 px-12 py-3 w-full sticky top-0 dark:bg-neutral-950 border-b border-neutral-500/40">
-          <div className="flex-1 flex items-center">
-            <div className="flex-1"></div>
-            <div className="flex gap-8 items-center">
-              <Bell />
-              <Grip />
-            </div>
-          </div>
-          <div className="flex gap-4 items-center border-l dark:border-neutral-500/40 pl-8">
-            <img alt="" className="rounded-full bg-white h-10 w-10" />
-            <div className="flex flex-col">
-              <span className="text-sm font-bold">Alex Rivera</span>
-              <span className="text-xs">IT Administrator</span>
-            </div>
-          </div>
-        </div>
+        <TopBar
+          isOpen={profileOpen}
+          toggle={() => setProfileOpen(!profileOpen)}
+        />
         {/* Main Content */}
-        <div className="p-8">{children}</div>
+        <div className="p-8" onClick={() => setProfileOpen(false)}>
+          {children}
+        </div>
       </div>
     </div>
   );
 };
+
+function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
+  return (
+    /* Top Bar */
+    <div className="flex items-center gap-8 px-12 py-3 w-full sticky top-0 dark:bg-neutral-950 border-b border-neutral-500/40">
+      <div className="flex-1 flex items-center">
+        <div className="flex-1"></div>
+        <div className="flex gap-8 items-center">
+          <Bell />
+          <Grip />
+        </div>
+      </div>
+      <div
+        className="flex gap-4 items-center border-l cursor-pointer dark:border-neutral-500/40 pl-8"
+        onClick={() => toggle()}
+      >
+        <img alt="" className="rounded-full bg-white h-10 w-10" />
+        <div className="flex flex-col">
+          <span className="text-sm font-bold">Alex Rivera</span>
+          <span className="text-xs">IT Administrator</span>
+        </div>
+        {isOpen && (
+          <div className="absolute top-full p-4 rounded-b-xl right-8 min-w-48 bg-neutral-800">
+            <a
+              href="/"
+              className="text-red-500 hover:opacity-80 flex gap-4 items-center justify-between"
+            >
+              <span>Logout</span>
+              <LogOut />
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function DropdownNavigation() {
   const [open, setOpen] = useState(false);
@@ -92,8 +119,12 @@ function DropdownNavigation() {
       </button>
       <div className={`panel-animation pl-6 mt-1 ${open ? "show" : ""}`}>
         <ul className="text-sm flex flex-col gap-1">
-          <li><a href="/attendance/">Manage</a></li>
-          <li><a href="/attendance/clock/">Clock</a></li>
+          <li>
+            <a href="/attendance/">Manage</a>
+          </li>
+          <li>
+            <a href="/attendance/clock/">Clock</a>
+          </li>
         </ul>
       </div>
     </>
