@@ -13,3 +13,19 @@ body {
     color-scheme: dark;
   }
 }
+
+
+.panel-animation {
+  overflow: hidden;
+  max-height: 0px;
+}
+
+.panel-animation {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 300ms ease;
+}
+
+.panel-animation.show {
+  max-height: 100%;
+}

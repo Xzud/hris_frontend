@@ -2,18 +2,14 @@ import {
   BadgeQuestionMark,
   Bell,
   CalendarCheck,
+  ChevronDown,
   FolderInput,
   Grip,
   LayoutDashboard,
   Settings,
   UsersRound,
 } from "lucide-react";
-import {
-  useEffect,
-  useState,
-  type PropsWithChildren,
-  type ReactNode,
-} from "react";
+import { useState, type PropsWithChildren, type ReactNode } from "react";
 import { useLocation } from "react-router";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
@@ -49,6 +45,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
               );
             })}
           </li>
+          <DropdownNavigation />
         </div>
         <hr className="dark:border-neutral-500/40" />
         <div className="flex flex-col mt-4">
@@ -82,6 +79,26 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
     </div>
   );
 };
+
+function DropdownNavigation() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button className="px-4 py-2 " onClick={() => setOpen(!open)}>
+        <div className="flex justify-between items-center">
+          <span>Attendance</span>
+          <ChevronDown className={`${open && "-rotate-90"} transition-all`} />
+        </div>
+      </button>
+      <div className={`panel-animation pl-6 mt-1 ${open ? "show" : ""}`}>
+        <ul className="text-sm flex flex-col gap-1">
+          <li><a href="/attendance/">Manage</a></li>
+          <li><a href="/attendance/clock/">Clock</a></li>
+        </ul>
+      </div>
+    </>
+  );
+}
 
 interface SideNavLinkProps {
   icon: ReactNode;
