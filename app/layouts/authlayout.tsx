@@ -10,11 +10,18 @@ import {
   Settings,
   UsersRound,
 } from "lucide-react";
-import { useState, type PropsWithChildren, type ReactNode } from "react";
-import { useLocation } from "react-router";
+import {
+  useEffect,
+  useState,
+  type PropsWithChildren,
+  type ReactNode,
+} from "react";
+import { useLocation, useNavigate } from "react-router";
+import { api } from "~/api";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
   const { pathname } = location;
 
@@ -24,6 +31,31 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
     { href: "/attendance/", icon: <CalendarCheck />, name: "Attendance" },
     { href: "/requests/", icon: <FolderInput />, name: "Requests" },
   ];
+
+  useEffect(() => {
+    async function checkTokenValidity(token: string) {
+      try {
+        const response = await api.post("/token/", {
+          token,
+        });
+
+        console.log(response);
+        if (response.status !== 200) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.log("Error as guard: ", error);
+      }
+    }
+
+    const accessToken = localStorage.getItem("simplehris_access_token");
+
+    if (accessToken) {
+      checkTokenValidity(accessToken);
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <div className="flex w-full dark:bg-neutral-900 min-h-screen ">
@@ -72,6 +104,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
 };
 
 function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
+  const navigate = useNavigate();
   return (
     /* Top Bar */
     <div className="flex items-center gap-8 px-12 py-3 w-full sticky top-0 dark:bg-neutral-950 border-b border-neutral-500/40">
@@ -92,14 +125,20 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
           <span className="text-xs">IT Administrator</span>
         </div>
         {isOpen && (
-          <div className="absolute top-full p-4 rounded-b-xl right-8 min-w-48 bg-neutral-800">
-            <a
-              href="/"
-              className="text-red-500 hover:opacity-80 flex gap-4 items-center justify-between"
+          <div className="absolute top-full rounded-b-xl right-8 min-w-48 bg-neutral-800">
+            <button
+              onClick={() => {
+                localStorage.removeItem("simplehris_access_token");
+                localStorage.removeItem("simplehris_refresh_token");
+                navigate("/login");
+              }}
+              className="text-red-500 hover:opacity-80 p-4 cursor-pointer w-full"
             >
-              <span>Logout</span>
-              <LogOut />
-            </a>
+              <div className="flex justify-between items-center">
+                <span>Logout</span>
+                <LogOut />
+              </div>
+            </button>
           </div>
         )}
       </div>

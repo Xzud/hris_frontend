@@ -5,7 +5,13 @@ export const api = axios.create({
   timeout: 1000,
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
-    // Authorization: process.env.SECRET_KEY,
   },
   withCredentials: true,
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) config.headers.set("Authorization", `Beaerer ${token}`);
+
+  return config;
 });

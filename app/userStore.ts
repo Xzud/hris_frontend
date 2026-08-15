@@ -5,6 +5,7 @@ interface UserProps {
   name: string;
   roles: string[];
   email: string;
+  username: string;
   employee_profile: EmployeeProfileProps;
 }
 
@@ -20,13 +21,9 @@ interface EmployeeProfileProps {
 interface UserStoreProps {
   user: UserProps | undefined;
   setUser: (user: UserProps) => void;
-  token: string | undefined;
-  setToken: (token: string) => void;
 }
 
 export const useUserStore = create<UserStoreProps>()((set) => ({
   user: undefined,
-  token: undefined,
   setUser: (user) => set({ user }),
-  setToken: (token) => set({ token }),
 }));

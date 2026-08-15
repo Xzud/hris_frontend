@@ -15,26 +15,33 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const userStore = useUserStore();
 
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   async function LoginUser(e: any) {
     e.preventDefault();
 
     const data = {
-      email,
+      username,
       password,
     };
 
     console.log(data);
 
     try {
-      const response = await api.post("/auth/login", data);
+      const response = await api.post("/auth/login/", data);
 
       console.log(response);
       if (response.status === 200) {
         userStore.setUser(response.data.user);
-        userStore.setToken(response.data.token);
+        localStorage.setItem(
+          "simplehris_access_token",
+          response.data.access_token,
+        );
+        localStorage.setItem(
+          "simplehris_refresh_token",
+          response.data.refresh_token,
+        );
 
         navigate("/dashboard");
       }
@@ -55,12 +62,12 @@ const LoginPage = () => {
         <form onSubmit={LoginUser} className="mt-4 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <InputField
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              label="Email"
-              type="email"
-              id="login_email"
-              placeholder="example@email.com"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              label="Username"
+              type="text"
+              id="login_username"
+              placeholder="Ex. employee1"
             />
             <InputField
               value={password}
