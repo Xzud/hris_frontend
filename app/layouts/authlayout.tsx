@@ -22,6 +22,7 @@ import { api } from "~/api";
 const AuthLayout = ({ children }: PropsWithChildren) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLoading, setLoading] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
   const { pathname } = location;
 
@@ -45,6 +46,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         }
       } catch (error) {
         console.log("Error as guard: ", error);
+        navigate("/login");
       }
     }
 
@@ -52,10 +54,21 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
 
     if (accessToken) {
       checkTokenValidity(accessToken);
+      setLoading(false);
     } else {
+      console.error("Access token not found.");
       navigate("/login");
     }
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-8 w-full dark:bg-neutral-900 min-h-screen items-center justify-center">
+        <div className="auth-loader"></div>
+        <span className="uppercase font-semibold dark:text-white">Loading</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full dark:bg-neutral-900 min-h-screen ">
