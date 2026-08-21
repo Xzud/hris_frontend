@@ -3,27 +3,39 @@ import { create } from "zustand";
 interface UserProps {
   id: string;
   name: string;
-  roles: string[];
+  role: string;
   email: string;
   username: string;
-  employee_profile: EmployeeProfileProps;
+  last_login: string;
 }
 
 interface EmployeeProfileProps {
+  employee_number: string;
   department: string;
   employee_id: string;
   employee_status: string;
   first_name: string;
   last_name: string;
+  hire_date: string;
+  birth_date: string;
   position: string;
+  email: string;
+  status: string;
+  id: number;
+  supervisor: UserProps;
+  user: UserProps;
 }
 
 interface UserStoreProps {
-  user: UserProps | undefined;
-  setUser: (user: UserProps) => void;
+  employee: EmployeeProfileProps | null;
+  setEmployee: (employee: EmployeeProfileProps) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }
 
 export const useUserStore = create<UserStoreProps>()((set) => ({
-  user: undefined,
-  setUser: (user) => set({ user }),
+  employee: null,
+  setEmployee: (employee) => set({ employee }),
+  loading: true,
+  setLoading: (loading) => set({ loading }),
 }));

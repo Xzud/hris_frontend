@@ -1,4 +1,4 @@
-import React, { useState, type ComponentProps } from "react";
+import React, { useEffect, useState, type ComponentProps } from "react";
 import type { Route } from "./+types/home";
 import { useNavigate } from "react-router";
 import { api } from "~/api";
@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const userStore = useUserStore();
+  const { setEmployee, employee } = useUserStore();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
       console.log(response);
       if (response.status === 200) {
-        userStore.setUser(response.data.user);
+        setEmployee(response.data.employee);
         localStorage.setItem(
           "simplehris_access_token",
           response.data.access_token,
@@ -43,6 +43,7 @@ const LoginPage = () => {
           response.data.refresh_token,
         );
 
+        console.log("Employee set: ", employee);
         navigate("/dashboard");
       }
     } catch (e) {

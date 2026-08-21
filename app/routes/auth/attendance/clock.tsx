@@ -1,9 +1,100 @@
 import { EllipsisVertical, X } from "lucide-react";
-import React, { useState, type PropsWithChildren } from "react";
+import React, { useEffect, useState, type PropsWithChildren } from "react";
+import Swal from "sweetalert2";
+import { api } from "~/api";
 import AuthLayout from "~/layouts/authlayout";
+import { useUserStore } from "~/userStore";
+
+interface AttendanceProps {
+  id: string;
+  date: string;
+  clock_in: string;
+  clock_out: string;
+  status: string;
+}
 
 const ClockPage = () => {
   const [statusOpen, setStatusOpen] = useState(false);
+  const [attendances, setAttendance] = useState<AttendanceProps[]>([]);
+  const [shiftStarted, setShiftStarted] = useState(false);
+
+  const { employee } = useUserStore();
+
+  useEffect(() => {
+    if (!employee) return;
+
+    fetchAttendances();
+  }, [employee]);
+
+  async function fetchAttendances() {
+    console.log("Employee: ", employee);
+    if (!employee) return;
+
+    try {
+      const response = await api.get(`/attendance/${employee.id}/`);
+      if (response.status === 200) {
+        setAttendance(response.data);
+      }
+      console.log("Attendances: ", response);
+    } catch (error) {
+      console.error("Error on fetching attendance: ", error);
+    }
+  }
+
+  function clockIn() {
+    Swal.fire({
+      title: "Clock-in",
+      text: "Are you sure you want to continue?",
+      icon: "question",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Yes, Clock in",
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        clock_in();
+      }
+    });
+
+    async function clock_in() {
+      try {
+        const response = await api.post("/attendance/clock-in/");
+
+        if (response.status === 201) {
+          await fetchAttendances();
+          Swal.fire({
+            title: "Clock-in",
+            text: "You have succesfully clocked in!",
+            icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Oh no, something went wrong.",
+            icon: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error on clock-in: ", error);
+        Swal.fire({
+          title: "Error",
+          text: "Oh no, something went wrong.",
+          icon: "error",
+        });
+      }
+    }
+  }
+
+  function clockOut() {
+    Swal.fire({
+      title: "Clock-out",
+      text: "Are you sure you want to continue?",
+      icon: "question",
+      confirmButtonColor: "#fb2c36",
+      confirmButtonText: "Yes, Clock out",
+      showCancelButton: true,
+    });
+  }
+
   return (
     <AuthLayout>
       {statusOpen && (
@@ -16,10 +107,16 @@ const ClockPage = () => {
               </span>
             </div>
             <div className="grid grid-cols-3 mt-8 gap-4">
-              <button className="w-40 flex items-center justify-center h-40 bg-emerald-500 rounded-xl font-bold text-2xl cursor-pointer">
+              <button
+                onClick={clockIn}
+                className="w-40 flex items-center justify-center h-40 bg-emerald-500 rounded-xl font-bold text-2xl cursor-pointer"
+              >
                 Clock In
               </button>
-              <button className="w-40 flex items-center justify-center h-40 bg-red-500 rounded-xl font-bold text-2xl cursor-pointer">
+              <button
+                onClick={clockOut}
+                className="w-40 flex items-center justify-center h-40 bg-red-500 rounded-xl font-bold text-2xl cursor-pointer"
+              >
                 Clock Out
               </button>
               <button className="w-40 flex items-center justify-center h-40 bg-amber-500 rounded-xl font-bold text-2xl cursor-pointer">
@@ -71,7 +168,7 @@ const ClockPage = () => {
         <div></div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="p-4 mt-4 rounded-xl dark:bg-neutral-800 border border-neutral-500/40">
           <div className="flex justify-between items-baseline">
             <span className="text-xl font-bold">My Requests</span>
@@ -99,24 +196,49 @@ const ClockPage = () => {
             </div>
           </div>
         </div>
-        {/* Employee List */}
-        <div className="rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-4">
-          <div className="grid grid-cols-[1fr_1fr_1fr_60px] text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
+        {/* Attendance List */}
+        <div className="col-span-2 rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-4">
+          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
             <span className="uppercase">Status</span>
             <span className="uppercase">Date</span>
             <span className="uppercase">Clock In</span>
+            <span className="uppercase">Clock Out</span>
             <span className="uppercase">Actions</span>
           </div>
-          <div className="grid grid-cols-[1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 ">
-            <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
-              Time in
-            </span>
-            <span>Aug 1, 2026</span>
-            <span>08:55 AM</span>
-            <div className="items-end">
-              <EllipsisVertical className="cursor-pointer" />
+          {attendances.map((attendance, idx) => (
+            <div
+              key={`attendance-${idx}`}
+              className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 "
+            >
+              <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
+                {attendance.status}
+              </span>
+              <span>
+                {new Date(attendance.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+              <span>
+                {new Date(attendance.clock_in).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </span>
+              <span>
+                {attendance.clock_out
+                  ? new Date(attendance.clock_out).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                    })
+                  : "-"}
+              </span>
+              <div className="items-end">
+                <EllipsisVertical className="cursor-pointer" />
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </AuthLayout>

@@ -16,14 +16,14 @@ import {
   type PropsWithChildren,
   type ReactNode,
 } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate, type To } from "react-router";
 import { api } from "~/api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "~/config";
+import { useUserStore } from "~/userStore";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [isLoading, setLoading] = useState(true);
+  const { loading: isLoading } = useUserStore();
   const [profileOpen, setProfileOpen] = useState(false);
   const { pathname } = location;
 
@@ -33,46 +33,16 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
     { href: "/attendance/", icon: <CalendarCheck />, name: "Attendance" },
     { href: "/requests/", icon: <FolderInput />, name: "Requests" },
   ];
-
-  useEffect(() => {
-    async function checkTokenValidity(token: string) {
-      try {
-        const response = await api.get("/token/");
-
-        console.log("Auth check response: ", response);
-        if (response.status == 401) {
-          localStorage.removeItem(REFRESH_TOKEN);
-          localStorage.removeItem(ACCESS_TOKEN);
-
-          navigate("/login");
-        }
-      } catch (error) {
-        console.log("Error as guard: ", error);
-        navigate("/login");
-      }
-    }
-
-    const accessToken = localStorage.getItem(ACCESS_TOKEN);
-    if (accessToken) {
-      checkTokenValidity(accessToken);
-      setLoading(false);
-    } else {
-      console.error("Access token not found.");
-      navigate("/login");
-    }
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col gap-8 w-full dark:bg-neutral-900 min-h-screen items-center justify-center">
-        <div className="auth-loader"></div>
-        <span className="uppercase font-semibold dark:text-white">Loading</span>
-      </div>
-    );
-  }
-
   return (
     <div className="flex w-full dark:bg-neutral-900 min-h-screen ">
+      {isLoading && (
+        <div className="absolute left-0 top-0 z-100 flex flex-col gap-8 w-full dark:bg-neutral-900 min-h-screen items-center justify-center">
+          <div className="auth-loader"></div>
+          <span className="uppercase font-semibold dark:text-white">
+            Loading
+          </span>
+        </div>
+      )}
       {/* Side Navigation Bar */}
       <div className="flex flex-col px-8 py-10 dark:bg-neutral-950 sticky top-0 h-screen w-70 border-r border-neutral-500/40">
         <div className="flex flex-col">
@@ -98,8 +68,12 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         <hr className="dark:border-neutral-500/40" />
         <div className="flex flex-col mt-4">
           <li className="list-none flex flex-col gap-2">
-            <SideNavLink icon={<BadgeQuestionMark />} name="Help Center" />
-            <SideNavLink icon={<Settings />} name="Settings" />
+            <SideNavLink
+              icon={<BadgeQuestionMark />}
+              name="Help Center"
+              href={"#"}
+            />
+            <SideNavLink icon={<Settings />} name="Settings" href={"#"} />
           </li>
         </div>
       </div>
@@ -118,7 +92,29 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
 };
 
 function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
+  const { employee } = useUserStore();
   const navigate = useNavigate();
+
+  const { setEmployee, setLoading } = useUserStore();
+
+  useEffect(() => {
+    fetchMe();
+
+    async function fetchMe() {
+      try {
+        const response = await api.get("/auth/me");
+        if (response.status === 200) {
+          setEmployee(response.data.employee);
+          setLoading(false);
+        } else {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Auth error: ", error);
+      }
+    }
+  }, []);
+
   return (
     /* Top Bar */
     <div className="flex items-center gap-8 px-12 py-3 w-full sticky top-0 dark:bg-neutral-950 border-b border-neutral-500/40">
@@ -135,7 +131,9 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
       >
         <img alt="" className="rounded-full bg-white h-10 w-10" />
         <div className="flex flex-col">
-          <span className="text-sm font-bold">Alex Rivera</span>
+          <span className="text-sm font-bold">
+            {employee?.first_name} {employee?.last_name}
+          </span>
           <span className="text-xs">IT Administrator</span>
         </div>
         {isOpen && (
@@ -173,10 +171,10 @@ function DropdownNavigation() {
       <div className={`panel-animation pl-6 mt-1 ${open ? "show" : ""}`}>
         <ul className="text-sm flex flex-col gap-1">
           <li>
-            <a href="/attendance/">Manage</a>
+            <Link to="/attendance/">Manage</Link>
           </li>
           <li>
-            <a href="/attendance/clock/">Clock</a>
+            <Link to="/attendance/clock/">Clock</Link>
           </li>
         </ul>
       </div>
@@ -187,26 +185,26 @@ function DropdownNavigation() {
 interface SideNavLinkProps {
   icon: ReactNode;
   name: string;
-  href?: string;
+  href: To;
   active?: boolean;
 }
 
 function SideNavLink({
   icon: Icon,
   name,
-  href,
+  href = "#",
   active = false,
 }: SideNavLinkProps) {
   return (
     <ul>
-      <a
-        href={href}
+      <Link
+        to={href}
         className={`flex gap-4 px-4 py-2 border-l-2 border-transparent cursor-pointer
         ${active ? "bg-indigo-700" : "hover:border-indigo-500 hover:bg-indigo-300/10"} transition-all rounded`}
       >
         {Icon}
         <span>{name}</span>
-      </a>
+      </Link>
     </ul>
   );
 }
