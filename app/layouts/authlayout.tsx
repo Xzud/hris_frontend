@@ -37,9 +37,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     async function checkTokenValidity(token: string) {
       try {
-        const response = await api.post("/token/", {
-          token,
-        });
+        const response = await api.get("/token/");
 
         console.log("Auth check response: ", response);
         if (response.status == 401) {
