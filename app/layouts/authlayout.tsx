@@ -41,36 +41,15 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
           token,
         });
 
-        console.log(response);
-        if (response.status !== 200) {
-          if (response.status === 401) {
-            refreshAccessToken();
-          } else {
-            navigate("/login");
-          }
+        console.log("Auth check response: ", response);
+        if (response.status == 401) {
+          localStorage.removeItem(REFRESH_TOKEN);
+          localStorage.removeItem(ACCESS_TOKEN);
+
+          navigate("/login");
         }
       } catch (error) {
         console.log("Error as guard: ", error);
-        navigate("/login");
-      }
-    }
-
-    async function refreshAccessToken() {
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-      try {
-        const response = await api.post("/token/refresh/", {
-          refresh: refreshToken,
-        });
-
-        console.log("Refresh response: ", response);
-        if (response.status !== 200) {
-          navigate("/login");
-        }
-
-        localStorage.setItem(ACCESS_TOKEN, response.data.access);
-        setLoading(false);
-      } catch (error) {
-        console.log("Error refreshing token: ", error);
         navigate("/login");
       }
     }
