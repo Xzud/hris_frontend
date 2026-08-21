@@ -18,6 +18,7 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { api } from "~/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "~/config";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
   const location = useLocation();
@@ -42,7 +43,11 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
 
         console.log(response);
         if (response.status !== 200) {
-          navigate("/login");
+          if (response.status === 401) {
+            refreshAccessToken();
+          } else {
+            navigate("/login");
+          }
         }
       } catch (error) {
         console.log("Error as guard: ", error);
@@ -50,8 +55,27 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
       }
     }
 
-    const accessToken = localStorage.getItem("simplehris_access_token");
+    async function refreshAccessToken() {
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+      try {
+        const response = await api.post("/token/refresh/", {
+          refresh: refreshToken,
+        });
 
+        console.log("Refresh response: ", response);
+        if (response.status !== 200) {
+          navigate("/login");
+        }
+
+        localStorage.setItem(ACCESS_TOKEN, response.data.access);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error refreshing token: ", error);
+        navigate("/login");
+      }
+    }
+
+    const accessToken = localStorage.getItem(ACCESS_TOKEN);
     if (accessToken) {
       checkTokenValidity(accessToken);
       setLoading(false);
