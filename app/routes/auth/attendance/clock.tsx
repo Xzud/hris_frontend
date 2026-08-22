@@ -1,3 +1,9 @@
+import {
+  format,
+  formatDuration,
+  intervalToDuration,
+  type Duration,
+} from "date-fns";
 import { EllipsisVertical, X } from "lucide-react";
 import React, { useEffect, useState, type PropsWithChildren } from "react";
 import Swal from "sweetalert2";
@@ -34,6 +40,7 @@ const ClockPage = () => {
       const response = await api.get(`/attendance/${employee.id}/`);
       if (response.status === 200) {
         setAttendance(response.data);
+        setShiftStarted(response.data[0].clock_out === null);
       }
       console.log("Attendances: ", response);
     } catch (error) {
@@ -51,14 +58,14 @@ const ClockPage = () => {
       showCancelButton: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        clock_in();
+        attendanceClockIn();
       }
     });
 
-    async function clock_in() {
+    async function attendanceClockIn() {
       try {
         const response = await api.post("/attendance/clock-in/");
-
+        console.log("Clock in response: ", response);
         if (response.status === 201) {
           await fetchAttendances();
           Swal.fire({
@@ -66,6 +73,7 @@ const ClockPage = () => {
             text: "You have succesfully clocked in!",
             icon: "success",
           });
+          setStatusOpen(false);
         } else {
           Swal.fire({
             title: "Error",
@@ -92,7 +100,41 @@ const ClockPage = () => {
       confirmButtonColor: "#fb2c36",
       confirmButtonText: "Yes, Clock out",
       showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        AttendanceClockOut();
+      }
     });
+
+    async function AttendanceClockOut() {
+      try {
+        const response = await api.post("/attendance/clock-out/");
+
+        console.log("Clock out response: ", response);
+        if (response.status === 200) {
+          await fetchAttendances();
+          Swal.fire({
+            title: "Clock-out",
+            text: "You have succesfully clocked out!",
+            icon: "success",
+          });
+          setStatusOpen(false);
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Oh no, something went wrong.",
+            icon: "error",
+          });
+        }
+      } catch (error) {
+        console.error("Error on clock-in: ", error);
+        Swal.fire({
+          title: "Error",
+          text: "Oh no, something went wrong.",
+          icon: "error",
+        });
+      }
+    }
   }
 
   return (
@@ -109,13 +151,15 @@ const ClockPage = () => {
             <div className="grid grid-cols-3 mt-8 gap-4">
               <button
                 onClick={clockIn}
-                className="w-40 flex items-center justify-center h-40 bg-emerald-500 rounded-xl font-bold text-2xl cursor-pointer"
+                disabled={shiftStarted}
+                className={`w-40 flex items-center justify-center h-40 rounded-xl font-bold text-2xl ${shiftStarted ? "bg-neutral-500 cursor-not-allowed" : "bg-emerald-500 cursor-pointer"}`}
               >
                 Clock In
               </button>
               <button
                 onClick={clockOut}
-                className="w-40 flex items-center justify-center h-40 bg-red-500 rounded-xl font-bold text-2xl cursor-pointer"
+                disabled={!shiftStarted}
+                className={`w-40 flex items-center justify-center h-40 rounded-xl font-bold text-2xl ${shiftStarted ? "bg-red-500 cursor-pointer" : "bg-neutral-500 cursor-not-allowed"} `}
               >
                 Clock Out
               </button>
@@ -200,49 +244,68 @@ const ClockPage = () => {
         <div className="col-span-2 rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-4">
           <div className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
             <span className="uppercase">Status</span>
-            <span className="uppercase">Date</span>
             <span className="uppercase">Clock In</span>
             <span className="uppercase">Clock Out</span>
+            <span className="uppercase">Duration</span>
             <span className="uppercase">Actions</span>
           </div>
-          {attendances.map((attendance, idx) => (
-            <div
-              key={`attendance-${idx}`}
-              className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 "
-            >
-              <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
-                {attendance.status}
-              </span>
-              <span>
-                {new Date(attendance.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-              <span>
-                {new Date(attendance.clock_in).toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
-              </span>
-              <span>
-                {attendance.clock_out
-                  ? new Date(attendance.clock_out).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                    })
-                  : "-"}
-              </span>
-              <div className="items-end">
-                <EllipsisVertical className="cursor-pointer" />
+          {attendances.map((attendance, idx) => {
+            const start = attendance.clock_in;
+            const end = attendance.clock_out;
+            const duration =
+              start && end
+                ? intervalToDuration({
+                    start: new Date(attendance.clock_in),
+                    end: new Date(attendance.clock_out),
+                  })
+                : null;
+
+            return (
+              <div
+                key={`attendance-${idx}`}
+                className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 "
+              >
+                <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
+                  {attendance.status}
+                </span>
+                <span>{datetimeFormat(attendance.clock_in)}</span>
+                <span>
+                  {attendance.clock_out
+                    ? datetimeFormat(attendance.clock_out)
+                    : "-"}
+                </span>
+                <span>{duration ? formatCustomDuration(duration) : "-"}</span>
+                <div className="items-end">
+                  <EllipsisVertical className="cursor-pointer" />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </AuthLayout>
   );
+
+  function datetimeFormat(date: string) {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
+  }
+
+  function formatCustomDuration(duration: Duration) {
+    // Handle potential undefined values with || 0
+    const h = duration.hours || 0;
+    const m = duration.minutes || 0;
+
+    // Add leading zero to minutes if needed (e.g., 5 -> "05")
+    const formattedMinutes = m < 10 ? `0${m}` : m;
+
+    return `${h}h ${formattedMinutes}m`;
+  }
 };
 
 export default ClockPage;

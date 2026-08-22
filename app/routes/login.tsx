@@ -34,14 +34,14 @@ const LoginPage = () => {
       console.log(response);
       if (response.status === 200) {
         setEmployee(response.data.employee);
-        localStorage.setItem(
-          "simplehris_access_token",
-          response.data.access_token,
-        );
-        localStorage.setItem(
-          "simplehris_refresh_token",
-          response.data.refresh_token,
-        );
+        // localStorage.setItem(
+        //   "simplehris_access_token",
+        //   response.data.access_token,
+        // );
+        // localStorage.setItem(
+        //   "simplehris_refresh_token",
+        //   response.data.refresh_token,
+        // );
 
         console.log("Employee set: ", employee);
         navigate("/dashboard");
