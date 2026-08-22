@@ -18,7 +18,6 @@ import {
 } from "react";
 import { Link, useLocation, useNavigate, type To } from "react-router";
 import { api } from "~/api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "~/config";
 import { useUserStore } from "~/userStore";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
@@ -93,8 +92,8 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
 
       if (response.status === 200) {
         // NOTE this is not used for now, currently implementing session based authentication.
-        localStorage.removeItem("simplehris_access_token");
-        localStorage.removeItem("simplehris_refresh_token");
+        // localStorage.removeItem("simplehris_access_token");
+        // localStorage.removeItem("simplehris_refresh_token");
 
         alert("Logout successfully");
         navigate("/login");
@@ -123,7 +122,7 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
           <span className="text-sm font-bold">
             {employee?.first_name} {employee?.last_name}
           </span>
-          <span className="text-xs">IT Administrator</span>
+          <span className="text-xs">{employee?.position?.name}</span>
         </div>
         {isOpen && (
           <div className="absolute top-full rounded-b-xl right-8 min-w-48 bg-neutral-800">
@@ -165,11 +164,18 @@ function DropdownNavigation() {
           >
             Clock
           </Link>
+          <Link
+            to="/attendance/schedule/"
+            className="p-2 pl-6 hover:bg-neutral-600/40"
+          >
+            Schedule
+          </Link>
         </div>
       </div>
     </>
   );
 }
+
 
 interface SideNavLinkProps {
   icon: ReactNode;
@@ -216,7 +222,7 @@ function Loader() {
         }
       } catch (error) {
         console.error("Auth error: ", error);
-        navigate("/login")
+        navigate("/login");
       }
     }
   }, []);

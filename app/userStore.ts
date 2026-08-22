@@ -9,6 +9,13 @@ interface UserProps {
   last_login: string;
 }
 
+interface PositionProps {
+  id: string;
+  name: string;
+  description: string;
+  level: number;
+}
+
 interface EmployeeProfileProps {
   employee_number: string;
   department: string;
@@ -18,7 +25,7 @@ interface EmployeeProfileProps {
   last_name: string;
   hire_date: string;
   birth_date: string;
-  position: string;
+  position: PositionProps;
   email: string;
   status: string;
   id: number;

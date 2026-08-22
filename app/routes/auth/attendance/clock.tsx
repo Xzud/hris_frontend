@@ -8,6 +8,7 @@ import { EllipsisVertical, X } from "lucide-react";
 import React, { useEffect, useState, type PropsWithChildren } from "react";
 import Swal from "sweetalert2";
 import { api } from "~/api";
+import TripleDotAction from "~/components/TripleDotAction";
 import AuthLayout from "~/layouts/authlayout";
 import { useUserStore } from "~/userStore";
 
@@ -276,7 +277,7 @@ const ClockPage = () => {
                 </span>
                 <span>{duration ? formatCustomDuration(duration) : "-"}</span>
                 <div className="items-end">
-                  <EllipsisVertical className="cursor-pointer" />
+                  <TripleDotAction />
                 </div>
               </div>
             );

@@ -8,5 +8,6 @@ export default [
   route("/employees/", "routes/auth/employees.tsx"),
   route("/attendance/", "routes/auth/attendance.tsx"),
   route("/attendance/clock", "routes/auth/attendance/clock.tsx"),
+  route("/attendance/schedule", "routes/auth/attendance/schedule.tsx"),
   route("/requests/", "routes/auth/requests.tsx"),
 ] satisfies RouteConfig;
