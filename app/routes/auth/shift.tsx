@@ -6,7 +6,7 @@ const ShiftPage = () => {
   return (
     <AuthLayout>
       {/* Title Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-12">
         <div className="flex flex-col">
           <span className="text-3xl font-bold">Manage Shift</span>
           <span className="text-sm text-neutral-300">

@@ -4,7 +4,7 @@ import { api } from "~/api";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
 
-interface EmployeeShiftProps {
+export interface EmployeeShiftProps {
   id: number;
   name: string;
   shift_type: string;

@@ -16,7 +16,7 @@ interface PositionProps {
   level: number;
 }
 
-interface EmployeeProfileProps {
+export interface EmployeeProfileProps {
   employee_number: string;
   department: string;
   employee_id: string;

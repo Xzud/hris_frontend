@@ -204,6 +204,7 @@ function Loader() {
     async function fetchMe() {
       try {
         const response = await api.get("/auth/me");
+        console.log("Me: ", response.data.employee)
         if (response.status === 200) {
           setEmployee(response.data.employee);
           setLoading(false);
