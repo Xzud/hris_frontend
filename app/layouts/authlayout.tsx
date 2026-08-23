@@ -2,6 +2,7 @@ import {
   BadgeQuestionMark,
   Bell,
   CalendarCheck,
+  CalendarClock,
   ChevronDown,
   FolderInput,
   Grip,
@@ -18,6 +19,7 @@ import {
 } from "react";
 import { Link, useLocation, useNavigate, type To } from "react-router";
 import { api } from "~/api";
+import { DropdownNavigation } from "~/components/DropdownNavigation";
 import { useUserStore } from "~/userStore";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
@@ -41,7 +43,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
           <span className="text-xs">Manage your employees</span>
         </div>
         <div className="flex flex-col mt-8 flex-1">
-          <li className="list-none flex flex-col gap-2">
+          <li className="list-none flex flex-col gap-3 mb-2">
             {sideNavigations.map((navigation, idx) => {
               return (
                 <SideNavLink
@@ -54,7 +56,30 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
               );
             })}
           </li>
-          <DropdownNavigation />
+          <DropdownNavigation
+            title={
+              <div className="flex gap-4">
+                <CalendarCheck />
+                <span>Attendance</span>
+              </div>
+            }
+            links={[
+              { label: "Manage Attendance", to: "/attendance/" },
+              { label: "Clock", to: "/attendance/clock/" },
+            ]}
+          />
+          <DropdownNavigation
+            title={
+              <div className="flex gap-4">
+                <CalendarClock />
+                <span>Shifts</span>
+              </div>
+            }
+            links={[
+              { label: "Manage Shifts", to: "/shifts/" },
+              { label: "Assignment", to: "/shifts/assignments/" },
+            ]}
+          />
         </div>
         <hr className="dark:border-neutral-500/40" />
         <div className="flex flex-col mt-4">
@@ -141,41 +166,6 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
     </div>
   );
 }
-
-function DropdownNavigation() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button className="px-4 py-2 mt-2" onClick={() => setOpen(!open)}>
-        <div className="flex justify-between items-center">
-          <CalendarCheck />
-          <span>Attendance</span>
-          <ChevronDown className={`${open && "-rotate-90"} transition-all`} />
-        </div>
-      </button>
-      <div className={`panel-animation mt-3 ${open ? "show" : ""}`}>
-        <div className="text-sm flex flex-col gap-1">
-          <Link to="/attendance/" className="p-2 pl-6 hover:bg-neutral-600/40">
-            Manage
-          </Link>
-          <Link
-            to="/attendance/clock/"
-            className="p-2 pl-6 hover:bg-neutral-600/40"
-          >
-            Clock
-          </Link>
-          <Link
-            to="/attendance/schedule/"
-            className="p-2 pl-6 hover:bg-neutral-600/40"
-          >
-            Schedule
-          </Link>
-        </div>
-      </div>
-    </>
-  );
-}
-
 
 interface SideNavLinkProps {
   icon: ReactNode;
