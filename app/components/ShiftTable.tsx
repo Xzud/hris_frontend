@@ -1,8 +1,44 @@
-import type { PropsWithChildren } from "react";
+import { useEffect, useState, type PropsWithChildren } from "react";
 import TripleDotAction from "./TripleDotAction";
+import { api } from "~/api";
+import { format } from "date-fns/format";
+import { parse } from "date-fns";
+
+interface EmployeeShiftProps {
+  id: number;
+  name: string;
+  shift_type: string;
+  start_time?: string;
+  end_time?: string;
+  required_hours_per_day?: number;
+  required_hours_per_week?: number;
+  break_minutes: number;
+  grace_period_minute: number;
+}
 
 const ShiftTable = () => {
+  const [employeeShifts, setEmployeeShifts] = useState<EmployeeShiftProps[]>(
+    [],
+  );
+
+  useEffect(() => {
+    fetchShifts();
+  }, []);
+
+  async function fetchShifts() {
+    try {
+      const response = await api.get("/employee-shifts/");
+
+      if (response.status === 200) {
+        console.log(response.data);
+        setEmployeeShifts(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching emplyoee shifts: ", error);
+    }
+  }
   const tableGridClass = "grid grid-cols-[150px_1fr_1fr_1fr_1fr_1fr_60px]";
+
   return (
     <div className="col-span-2 rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-4">
       <div
@@ -16,23 +52,45 @@ const ShiftTable = () => {
         <ShiftHeaderLabel>Hours (Week)</ShiftHeaderLabel>
         <ShiftHeaderLabel>Actions</ShiftHeaderLabel>
       </div>
-      <div
-        className={`${tableGridClass} justify-items-start items-center font-semibold dark:text-neutral-300 p-4 `}
-      >
-        <ShiftContentItem>
-          <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
-            Flex-Weekly
-          </span>
-        </ShiftContentItem>
-        <ShiftContentItem>-</ShiftContentItem>
-        <ShiftContentItem>-</ShiftContentItem>
-        <ShiftContentItem>-</ShiftContentItem>
-        <ShiftContentItem>-</ShiftContentItem>
-        <ShiftContentItem>-</ShiftContentItem>
-        <ShiftContentItem className="items-end">
-          <TripleDotAction />
-        </ShiftContentItem>
-      </div>
+      {employeeShifts.map((shift, idx) => {
+        const getFormatedTime = (time: string | undefined) => {
+          if (!time) {
+            return "-";
+          }
+
+          const datetime = parse(time, "HH:mm:ss", new Date());
+          return format(datetime, "h:mm a");
+        };
+
+        return (
+          <div
+            key={"shift" + idx}
+            className={`${tableGridClass} justify-items-start items-center font-semibold dark:text-neutral-300 p-4 `}
+          >
+            <ShiftContentItem>
+              <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40 text-xs">
+                {shift.shift_type}
+              </span>
+            </ShiftContentItem>
+            <ShiftContentItem>{shift.name}</ShiftContentItem>
+            <ShiftContentItem>-</ShiftContentItem>
+            <ShiftContentItem>
+              {getFormatedTime(shift.start_time) +
+                " / " +
+                getFormatedTime(shift.end_time)}
+            </ShiftContentItem>
+            <ShiftContentItem>
+              {shift.required_hours_per_day ?? "-"}
+            </ShiftContentItem>
+            <ShiftContentItem>
+              {shift.required_hours_per_week ?? "-"}
+            </ShiftContentItem>
+            <ShiftContentItem className="items-end">
+              <TripleDotAction />
+            </ShiftContentItem>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -53,9 +111,12 @@ function ShiftHeaderLabel({
 function ShiftContentItem({
   children,
   className,
-}: { className?: string } & PropsWithChildren) {
+  centered = true,
+}: { className?: string; centered?: boolean } & PropsWithChildren) {
   return (
-    <span className={`w-full flex items-center justify-center ${className}`}>
+    <span
+      className={`w-full ${centered && "flex items-center justify-center"} ${className}`}
+    >
       {children}
     </span>
   );
