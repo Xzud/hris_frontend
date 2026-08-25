@@ -67,7 +67,7 @@ const AssignmentTable = () => {
             className={`${tableGridClass} justify-items-start items-center font-semibold dark:text-neutral-300 p-4 `}
           >
             <AssignmentContentItem>
-              <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40 text-xs">
+              <span className={`rounded-full py-1 px-4 border border-green-500 bg-green-500/40 text-xs`}>
                 {assignment.shift.shift_type}
               </span>
             </AssignmentContentItem>

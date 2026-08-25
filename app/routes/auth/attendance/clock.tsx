@@ -261,12 +261,19 @@ const ClockPage = () => {
                   })
                 : null;
 
+            const statusColor: Record<string, string> = {
+              Late: "border-amber-500 bg-amber-500/40",
+              Present: "border-green-500 bg-green-500/40",
+            };
+
             return (
               <div
                 key={`attendance-${idx}`}
                 className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 "
               >
-                <span className="rounded-full py-1 px-4 border border-green-500 bg-green-500/40">
+                <span
+                  className={`rounded-full py-1 px-4 border ${statusColor[attendance.status]}`}
+                >
                   {attendance.status}
                 </span>
                 <span>{datetimeFormat(attendance.clock_in)}</span>
@@ -277,7 +284,21 @@ const ClockPage = () => {
                 </span>
                 <span>{duration ? formatCustomDuration(duration) : "-"}</span>
                 <div className="items-end">
-                  <TripleDotAction />
+                  <TripleDotAction
+                    deleteAction={async () => {
+                      try {
+                        const response = await api.delete(
+                          `/attendance/${attendance.id}/delete/`,
+                        );
+                        if (response.status === 204) {
+                          alert("Deleted successfully");
+                          fetchAttendances();
+                        }
+                      } catch (error) {
+                        console.log("Error deleting attendance: ", error);
+                      }
+                    }}
+                  />
                 </div>
               </div>
             );

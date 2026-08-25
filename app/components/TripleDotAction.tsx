@@ -8,7 +8,15 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-const TripleDotAction = () => {
+type TripleDotActionProps = {
+  editAction?: () => void;
+  deleteAction?: () => void;
+};
+
+const TripleDotAction = ({
+  editAction,
+  deleteAction,
+}: TripleDotActionProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -16,12 +24,14 @@ const TripleDotAction = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem className={"text-red-500"}>Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={editAction}>Edit</DropdownMenuItem>
+          <DropdownMenuItem onClick={deleteAction} className={"text-red-500"}>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
- 
+
 export default TripleDotAction;
