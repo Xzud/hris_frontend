@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { api } from "~/api";
 import { InputLabel } from "~/components/InputLabel";
+import TripleDotAction from "~/components/TripleDotAction";
 import AuthLayout from "~/layouts/authlayout";
 
 interface EmployeeProps {
@@ -127,7 +128,7 @@ const EmployeesPage = () => {
 
       {/* Employee List */}
       <div className="rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-8">
-        <div className="grid grid-cols-[1.5fr_1fr_1fr__1fr_1fr_60px] justify-items-start text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
+        <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_60px] justify-items-start text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
           <span className="uppercase">employee</span>
           <span className="uppercase">Position & Dept</span>
           <span className="uppercase">Supervisory</span>
@@ -164,14 +165,14 @@ const EmployeesPage = () => {
               </div>
               <span className="text-xs uppercase">Morning</span>
               <span className="text-xs uppercase">Active</span>
-              <div className="items-end">
-                <EllipsisVertical className="cursor-pointer" />
-              </div>
+              <TripleDotAction />
             </div>
           ))
         ) : (
           <div className="flex items-center justify-center p-4">
-            <span className="text-sm dark:text-neutral-300">No Employees found.</span>
+            <span className="text-sm dark:text-neutral-300">
+              No Employees found.
+            </span>
           </div>
         )}
       </div>
@@ -182,9 +183,15 @@ const EmployeesPage = () => {
 export default EmployeesPage;
 
 function EmployeeFormModal({ setModal }: { setModal: Function }) {
+  const inputStyle = "border border-neutral-500/40 rounded-lg p-2";
+
   return (
-    <div className="absolute top-0 left-0 h-screen w-screen bg-neutral-800/80 flex items-center justify-center">
-      <div className="rounded-xl bg-neutral-900 border border-neutral-500/40 p-8 min-w-120">
+    <div className="fixed top-0 left-0 h-screen w-screen bg-neutral-800/80 flex items-center justify-center">
+      <div
+        className="absolute inset-0 top-0 left-0 h-screen w-screen bg-neutral-800/80 z-100]"
+        onClick={() => setModal(false)}
+      />
+      <div className="flex flex-col gap-4 rounded-xl bg-neutral-900 border border-neutral-500/40 p-8 min-w-120 z-101">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-2xl font-bold">Add Employee</span>
@@ -199,16 +206,63 @@ function EmployeeFormModal({ setModal }: { setModal: Function }) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-3 mt-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-xs font-semibold uppercase">First Name</span>
-            <input
-              type="text"
-              name=""
-              id=""
-              className="border border-neutral-500/40 rounded-lg p-2"
-            />
-          </div>
+        <div className="grid grid-cols-3 gap-4">
+          <InputLabel label="First name">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+          <InputLabel label="Middle name">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+          <InputLabel label="Last name">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <InputLabel label="Department">
+            <select name="" id="" className={`${inputStyle}`}>
+              <option value="">IT Department</option>
+              <option value="">HR Department</option>
+              <option value="">Management</option>
+            </select>
+          </InputLabel>
+          <InputLabel label="Supervisor">
+            <select name="" id="" className={`${inputStyle}`}>
+              <option value="">Supervisor 1</option>
+              <option value="">Supervisor 2</option>
+              <option value="">Supervisor 3</option>
+            </select>
+          </InputLabel>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <InputLabel label="Phone number">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+          <InputLabel label="Email">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+          <InputLabel label="Position">
+            <select name="" id="" className={`${inputStyle}`}>
+              <option value="">IT</option>
+              <option value="">HR</option>
+              <option value="">Manager</option>
+            </select>
+          </InputLabel>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <InputLabel label="Birth date">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+          <InputLabel label="Hire date">
+            <input type="text" name="" id="" className={`${inputStyle}`} />
+          </InputLabel>
+        </div>
+        <div className="flex self-end gap-4 items-end mt-6">
+          <button className="px-4 py-2 border-white border rounded-lg">
+            Draft
+          </button>
+          <button className="px-4 py-2 bg-emerald-500 border rounded-lg">
+            Create
+          </button>
         </div>
       </div>
     </div>

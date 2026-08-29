@@ -320,8 +320,13 @@ const ClockPage = () => {
 
   function formatCustomDuration(duration: Duration) {
     // Handle potential undefined values with || 0
-    const h = duration.hours || 0;
+    const d = duration.days || 0;
+    let h = duration.hours || 0;
     const m = duration.minutes || 0;
+
+    if (duration.days) {
+      h = h + (duration.days * 24)
+    }
 
     // Add leading zero to minutes if needed (e.g., 5 -> "05")
     const formattedMinutes = m < 10 ? `0${m}` : m;
