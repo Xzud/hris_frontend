@@ -115,7 +115,7 @@ function ShiftContentItem({
 }: { className?: string; centered?: boolean } & PropsWithChildren) {
   return (
     <span
-      className={`w-full ${centered && "flex items-center justify-center"} ${className}`}
+      className={`w-full ${centered && "text-center flex items-center justify-center"} ${className}`}
     >
       {children}
     </span>

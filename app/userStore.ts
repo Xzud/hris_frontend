@@ -16,9 +16,14 @@ interface PositionProps {
   level: number;
 }
 
+interface DepartmentProps{
+  id: string;
+  name: string;
+}
+
 export interface EmployeeProfileProps {
   employee_number: string;
-  department: string;
+  department: DepartmentProps;
   employee_id: string;
   employee_status: string;
   first_name: string;
@@ -29,7 +34,7 @@ export interface EmployeeProfileProps {
   email: string;
   status: string;
   id: number;
-  supervisor: UserProps;
+  supervisor: EmployeeProfileProps;
   user: UserProps;
 }
 

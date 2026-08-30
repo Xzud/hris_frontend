@@ -6,6 +6,7 @@ export default [
   route("/register/", "routes/register.tsx"),
   route("/dashboard/", "routes/auth/dashboard.tsx"),
   route("/employees/", "routes/auth/employees.tsx"),
+  route("/employees/:id", "routes/auth/employee/preview.tsx"),
   route("/attendance/", "routes/auth/attendance.tsx"),
   route("/attendance/clock", "routes/auth/attendance/clock.tsx"),
   route("/shifts/", "routes/auth/shift.tsx"),

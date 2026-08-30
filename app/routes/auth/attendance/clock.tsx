@@ -243,12 +243,12 @@ const ClockPage = () => {
         </div>
         {/* Attendance List */}
         <div className="col-span-2 rounded-xl dark:bg-neutral-800 border dark:border-neutral-500/30 mt-4">
-          <div className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
-            <span className="uppercase">Status</span>
-            <span className="uppercase">Clock In</span>
-            <span className="uppercase">Clock Out</span>
-            <span className="uppercase">Duration</span>
-            <span className="uppercase">Actions</span>
+          <div className="[&_span]:uppercase [&_span]:text-xs grid grid-cols-[1fr_1fr_1fr_1fr_60px] text-xs font-semibold dark:text-neutral-300 p-4 border-b dark:border-neutral-500/40">
+            <span>Status</span>
+            <span>Clock In</span>
+            <span>Clock Out</span>
+            <span>Duration</span>
+            <span>Actions</span>
           </div>
           {attendances.map((attendance, idx) => {
             const start = attendance.clock_in;
@@ -269,7 +269,7 @@ const ClockPage = () => {
             return (
               <div
                 key={`attendance-${idx}`}
-                className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 "
+                className="grid grid-cols-[1fr_1fr_1fr_1fr_60px] justify-items-start items-center font-semibold dark:text-neutral-300 p-4 [&_span]:uppercase [&_span]:text-xs"
               >
                 <span
                   className={`rounded-full py-1 px-4 border ${statusColor[attendance.status]}`}
@@ -325,7 +325,7 @@ const ClockPage = () => {
     const m = duration.minutes || 0;
 
     if (duration.days) {
-      h = h + (duration.days * 24)
+      h = h + duration.days * 24;
     }
 
     // Add leading zero to minutes if needed (e.g., 5 -> "05")

@@ -3,7 +3,6 @@ import {
   Bell,
   CalendarCheck,
   CalendarClock,
-  ChevronDown,
   FolderInput,
   Grip,
   LayoutDashboard,
@@ -33,11 +32,12 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
     { href: "/employees/", icon: <UsersRound />, name: "Employees" },
     { href: "/requests/", icon: <FolderInput />, name: "Requests" },
   ];
+
   return (
     <div className="flex w-full dark:bg-neutral-900 min-h-screen ">
       {isLoading && <Loader />}
       {/* Side Navigation Bar */}
-      <div className="flex flex-col px-8 py-10 dark:bg-neutral-950 sticky top-0 h-screen w-70 border-r border-neutral-500/40">
+      <div className="hidden xl:flex flex-col px-8 py-10 dark:bg-neutral-950 sticky top-0 h-screen w-70 border-r border-neutral-500/40">
         <div className="flex flex-col">
           <span className="text-2xl font-bold">Simple HRIS</span>
           <span className="text-xs">Manage your employees</span>
@@ -93,7 +93,7 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
           </li>
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full hidden xl:block">
         <TopBar
           isOpen={profileOpen}
           toggle={() => setProfileOpen(!profileOpen)}
@@ -102,6 +102,12 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
         <div className="p-8" onClick={() => setProfileOpen(false)}>
           {children}
         </div>
+      </div>
+      <div className="xl:hidden flex items-center justify-center w-full h-screen">
+        <span className="text-center">
+          This application is only available on desktop devices.<br />Please
+          use a larger screen.
+        </span>
       </div>
     </div>
   );
@@ -204,7 +210,7 @@ function Loader() {
     async function fetchMe() {
       try {
         const response = await api.get("/auth/me");
-        console.log("Me: ", response.data.employee)
+        console.log("Me: ", response.data.employee);
         if (response.status === 200) {
           setEmployee(response.data.employee);
           setLoading(false);
