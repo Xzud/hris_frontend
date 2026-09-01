@@ -285,19 +285,25 @@ const ClockPage = () => {
                 <span>{duration ? formatCustomDuration(duration) : "-"}</span>
                 <div className="items-end">
                   <TripleDotAction
-                    deleteAction={async () => {
-                      try {
-                        const response = await api.delete(
-                          `/attendance/${attendance.id}/delete/`,
-                        );
-                        if (response.status === 204) {
-                          alert("Deleted successfully");
-                          fetchAttendances();
-                        }
-                      } catch (error) {
-                        console.log("Error deleting attendance: ", error);
-                      }
-                    }}
+                    actions={[
+                      {
+                        label: "Delete",
+                        action: async () => {
+                          try {
+                            const response = await api.delete(
+                              `/attendance/${attendance.id}/delete/`,
+                            );
+                            if (response.status === 204) {
+                              alert("Deleted successfully");
+                              fetchAttendances();
+                            }
+                          } catch (error) {
+                            console.log("Error deleting attendance: ", error);
+                          }
+                        },
+                        className: "text-red-500",
+                      },
+                    ]}
                   />
                 </div>
               </div>

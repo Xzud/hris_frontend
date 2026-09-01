@@ -10,6 +10,7 @@ export default [
   route("/attendance/", "routes/auth/attendance.tsx"),
   route("/attendance/clock", "routes/auth/attendance/clock.tsx"),
   route("/shifts/", "routes/auth/shift.tsx"),
+  route("/shifts/:id", "routes/auth/shifts/preview.tsx"),
   route("/shifts/assignments/", "routes/auth/shifts/assignment.tsx"),
 
   route("/requests/", "routes/auth/requests.tsx"),

@@ -3,6 +3,7 @@ import TripleDotAction from "./TripleDotAction";
 import { api } from "~/api";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
+import { useNavigate } from "react-router";
 
 export interface EmployeeShiftProps {
   id: number;
@@ -17,6 +18,8 @@ export interface EmployeeShiftProps {
 }
 
 const ShiftTable = () => {
+  const navigate = useNavigate();
+
   const [employeeShifts, setEmployeeShifts] = useState<EmployeeShiftProps[]>(
     [],
   );
@@ -86,7 +89,21 @@ const ShiftTable = () => {
               {shift.required_hours_per_week ?? "-"}
             </ShiftContentItem>
             <ShiftContentItem className="items-end">
-              <TripleDotAction />
+              <TripleDotAction
+                actions={[
+                  {
+                    label: "Edit",
+                    action: () => {
+                      navigate(`/shifts/${shift.id}`);
+                    },
+                  },
+                  {
+                    label: "Delete",
+                    action: () => {},
+                    className: "text-red-500",
+                  },
+                ]}
+              />
             </ShiftContentItem>
           </div>
         );

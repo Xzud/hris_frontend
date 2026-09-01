@@ -89,7 +89,19 @@ const AssignmentTable = () => {
             </AssignmentContentItem>
             <AssignmentContentItem>-</AssignmentContentItem>
             <AssignmentContentItem className="items-end">
-              <TripleDotAction />
+              <TripleDotAction
+                actions={[
+                  {
+                    label: "Edit",
+                    action: () => {},
+                  },
+                  {
+                    label: "Delete",
+                    action: () => {},
+                    className: "text-red-500",
+                  },
+                ]}
+              />
             </AssignmentContentItem>
           </div>
         );
