@@ -4,18 +4,7 @@ import { api } from "~/api";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
 import { useNavigate } from "react-router";
-
-export interface EmployeeShiftProps {
-  id: number;
-  name: string;
-  shift_type: string;
-  start_time?: string;
-  end_time?: string;
-  required_hours_per_day?: number;
-  required_hours_per_week?: number;
-  break_minutes: number;
-  grace_period_minute: number;
-}
+import type { EmployeeShiftProps } from "~/userStore";
 
 const ShiftTable = () => {
   const navigate = useNavigate();
@@ -78,9 +67,11 @@ const ShiftTable = () => {
             <ShiftContentItem>{shift.name}</ShiftContentItem>
             <ShiftContentItem>-</ShiftContentItem>
             <ShiftContentItem>
-              {getFormatedTime(shift.start_time) +
-                " / " +
-                getFormatedTime(shift.end_time)}
+              {shift.start_time && shift.end_time
+                ? getFormatedTime(shift.start_time) +
+                  " / " +
+                  getFormatedTime(shift.end_time)
+                : "-"}
             </ShiftContentItem>
             <ShiftContentItem>
               {shift.required_hours_per_day ?? "-"}

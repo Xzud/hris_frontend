@@ -19,6 +19,7 @@ import {
 import { Link, useLocation, useNavigate, type To } from "react-router";
 import { api } from "~/api";
 import { DropdownNavigation } from "~/components/DropdownNavigation";
+import { defaultProfileImage } from "~/globals";
 import { useUserStore } from "~/userStore";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
@@ -105,8 +106,9 @@ const AuthLayout = ({ children }: PropsWithChildren) => {
       </div>
       <div className="xl:hidden flex items-center justify-center w-full h-screen">
         <span className="text-center">
-          This application is only available on desktop devices.<br />Please
-          use a larger screen.
+          This application is only available on desktop devices.
+          <br />
+          Please use a larger screen.
         </span>
       </div>
     </div>
@@ -148,7 +150,10 @@ function TopBar({ isOpen, toggle }: { isOpen: boolean; toggle: Function }) {
         className="flex gap-4 items-center border-l cursor-pointer dark:border-neutral-500/40 pl-8"
         onClick={() => toggle()}
       >
-        <img alt="" className="rounded-full bg-white h-10 w-10" />
+        <img
+          src={defaultProfileImage}
+          className="rounded-full bg-white h-10 w-10"
+        />
         <div className="flex flex-col">
           <span className="text-sm font-bold">
             {employee?.first_name} {employee?.last_name}

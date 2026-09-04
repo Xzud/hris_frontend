@@ -16,11 +16,31 @@ interface PositionProps {
   level: number;
 }
 
-interface DepartmentProps{
+interface DepartmentProps {
   id: string;
   name: string;
 }
 
+export interface EmployeeShiftProps {
+  id: string;
+  name: string;
+  shift_type: string;
+  start_time: string | null;
+  end_time: string | null;
+  required_hours_per_day: number | null;
+  required_hours_per_week: number | null;
+  break_minutes: number;
+  grace_period_minute: number;
+}
+export interface EmployeeAssignmentProps {
+  id: string;
+  assigned_by: string;
+  days_off: number[];
+  effective_from: string;
+  effective_to: string | null;
+  shift: EmployeeShiftProps;
+  employee: EmployeeProfileProps;
+}
 export interface EmployeeProfileProps {
   employee_number: string;
   department: DepartmentProps;
@@ -33,8 +53,10 @@ export interface EmployeeProfileProps {
   position: PositionProps;
   email: string;
   status: string;
+  phone: string;
   id: number;
   supervisor: EmployeeProfileProps;
+  employee_assignments: EmployeeAssignmentProps[];
   user: UserProps;
 }
 

@@ -3,17 +3,8 @@ import TripleDotAction from "./TripleDotAction";
 import { api } from "~/api";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
-import type { EmployeeProfileProps } from "~/userStore";
-import type { EmployeeShiftProps } from "./ShiftTable";
+import type { EmployeeProfileProps, EmployeeAssignmentProps } from "~/userStore";
 
-interface EmployeeAssignmentProps {
-  id: number;
-  employee: EmployeeProfileProps;
-  shift: EmployeeShiftProps;
-  effective_from: string;
-  effective_to: string;
-  assigned_by: EmployeeProfileProps;
-}
 
 const AssignmentTable = () => {
   const [employeeAssignments, setEmployeeAssignments] = useState<

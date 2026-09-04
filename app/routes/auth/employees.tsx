@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { api } from "~/api";
+import Button from "~/components/Button";
 import { InputLabel } from "~/components/InputLabel";
 import TripleDotAction from "~/components/TripleDotAction";
+import { defaultProfileImage } from "~/globals";
 import AuthLayout from "~/layouts/authlayout";
 import type { EmployeeProfileProps } from "~/userStore";
 
@@ -69,9 +71,9 @@ const EmployeesPage = () => {
           </span>
         </div>
         <div className="flex items-center justify-stretch gap-4">
-          <button className="font-bold text-white border px-4 py-2 rounded cursor-pointer">
+          <Button>
             Export
-          </button>
+          </Button>
           <button
             className="font-bold bg-indigo-500 border border-indigo-500 px-4 py-2 rounded cursor-pointer"
             onClick={() => setModalActive(true)}
@@ -163,7 +165,10 @@ const EmployeesPage = () => {
                 className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr_60px] justify-items-start font-semibold dark:text-neutral-300 p-4 "
               >
                 <div className="flex items-center gap-2">
-                  <img alt="" className="h-10 w-10 bg-white rounded-full" />
+                  <img
+                    src={defaultProfileImage}
+                    className="h-10 w-10 bg-white rounded-full"
+                  />
                   <div className="flex flex-col">
                     <span className="text-sm">
                       {employee.first_name} {employee.last_name}
